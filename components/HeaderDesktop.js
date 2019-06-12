@@ -3,7 +3,25 @@ import { Menu, Segment, Container, Icon, Header, Grid, Input, Button, Sticky, Ra
 import { Link, Router } from '../routes';
 
 class HeaderDesktop extends Component {
-
+    constructor(props) {
+        super(props);
+        this.state = {value:''}
+  
+        this.handleChange = this.handleChange.bind(this);
+        this.keyPress = this.keyPress.bind(this);
+     } 
+   
+    handleChange(e) {
+        this.setState({ value: e.target.value });
+     }
+  
+    keyPress(e){
+        if(e.keyCode == 13){
+           console.log('value', e.target.value);
+           Router.pushRoute(`/searchResult/${encodeURIComponent(this.state.value)}`);
+           // put the login here
+        }
+    }
     render() {
         return(
             <React.Fragment>
@@ -58,7 +76,13 @@ class HeaderDesktop extends Component {
                                         </Header>
                                     </Grid.Column >
                                     <Grid.Column width={7} textAlign='center'>
-                                        <Input icon={<Icon name='search' inverted circular link />} placeholder='Search Items...' size='small' fluid/>
+                                    <Input icon={<Icon name='search' inverted circular link onClick={() => Router.pushRoute(`/searchResult/${encodeURIComponent(this.state.value)}`)}/>} 
+                                               placeholder='Search Items...'
+                                               size='small'
+                                               onKeyDown={this.keyPress}
+                                               
+                                               onChange={this.handleChange}
+                                               fluid/>
                                     </Grid.Column>
                                     <Grid.Column width={5} textAlign='right'>
                                         <Button color='grey' onClick={() => Router.pushRoute(`/disputes`)}>
