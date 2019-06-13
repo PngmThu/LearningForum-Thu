@@ -135,6 +135,8 @@ class RentalIndex extends Component {
         //     })
         // );
 
+        const timeEnd = timeArray.map((time)=>
+            {return moment.unix(parseInt(time[0]) + parseInt(time[2])).format('dddd, Do MMMM YYYY, h:mm:ss a')});
         let isMobileFromSSR = false;
 
         if(req){
@@ -146,7 +148,7 @@ class RentalIndex extends Component {
         return { deployedRents, availableRents, names, deposit, rentalFee,
                  isMobileFromSSR, timeArray, answererList, questionRating, 
                  isOverDue,
-                  shareToken };
+                  shareToken, timeEnd };
     }
 
     shareToken = async(event, address) =>{
@@ -187,7 +189,7 @@ class RentalIndex extends Component {
             const time = this.props.timeArray[i];
             const isOverDue = this.props.isOverDue[i];
             const shareToken = this.props.shareToken[i];
-            const timeEnd = moment.unix(parseInt(time[0]) + parseInt(time[2])).format('dddd, Do MMMM YYYY, h:mm:ss a');
+            const timeEnd = this.props.timeEnd[i];
             console.log(deposit)
             // if(isOverDue && (shareToken==0)){
             //     this.shareToken(address);
