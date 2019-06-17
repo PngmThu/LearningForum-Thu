@@ -11,6 +11,7 @@ routes
      .add('/rents/scancode', '/rents/scancode')
      .add('/rents/:address', '/rents/show')
      .add('/rents/:address/dispute', '/rents/disputes/index')
+     .add('/:value','/index')
      .add('/rents/:address/dispute/new', '/rents/disputes/new');
 
 module.exports = routes;
