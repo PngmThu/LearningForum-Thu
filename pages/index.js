@@ -12,7 +12,7 @@ import { Link, Router } from '../routes';
 import RentalShow from './rents/show';
 import moment, { now } from 'moment';
 import web3 from '../ethereum/web3';
-
+import {search} from '../utils/search';
 
 class RentalIndex extends Component {
     state = {
@@ -21,7 +21,7 @@ class RentalIndex extends Component {
         didShareToken: false
     }
 
-    static async getInitialProps({ req }) { 
+    static async getInitialProps({req,query}) { 
         
         const deployedRents = await factory.methods.getDeployedRentals().call();
         // const status = await Promise.all(
@@ -31,12 +31,21 @@ class RentalIndex extends Component {
         //     })
         // );
 
-        const availableRents = deployedRents;
         //.filter((address, i) => 
             //status[i] == "PUBLISHED"
         //);
-
-        availableRents.reverse();
+        
+        
+        deployedRents.reverse();
+        let chosenRents;
+        console.log(query.value);
+        //filter the questions based on search value
+        if (query.value === undefined || query.value === 'favicon.ico') chosenRents = deployedRents;
+        else {
+            let searchItem = decodeURIComponent(query.value.substring(7));
+            chosenRents = await search(searchItem,deployedRents);
+        }
+        const availableRents = chosenRents;
 
         let names = [];
         let owners = [];
@@ -135,6 +144,8 @@ class RentalIndex extends Component {
         //     })
         // );
 
+        const timeEnd = timeArray.map((time)=>
+            {return moment.unix(parseInt(time[0]) + parseInt(time[2])).format('dddd, Do MMMM YYYY, h:mm:ss a')});
         let isMobileFromSSR = false;
 
         if(req){
@@ -146,7 +157,7 @@ class RentalIndex extends Component {
         return { deployedRents, availableRents, names, deposit, rentalFee,
                  isMobileFromSSR, timeArray, answererList, questionRating, 
                  isOverDue,
-                  shareToken };
+                  shareToken, timeEnd };
     }
 
     shareToken = async(event, address) =>{
@@ -187,8 +198,8 @@ class RentalIndex extends Component {
             const time = this.props.timeArray[i];
             const isOverDue = this.props.isOverDue[i];
             const shareToken = this.props.shareToken[i];
-            const timeEnd = moment.unix(parseInt(time[0]) + parseInt(time[2])).format('dddd, Do MMMM YYYY, h:mm:ss a');
-            console.log(deposit)
+            const timeEnd = this.props.timeEnd[i];
+            console.log(shareToken);
             // if(isOverDue && (shareToken==0)){
             //     this.shareToken(address);
             // }
