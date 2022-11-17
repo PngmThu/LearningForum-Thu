@@ -31,7 +31,7 @@
     "mobile-detect": "^1.4.3",
     "mocha": "^6.1.4",
     "moment": "^2.24.0",
-    "next": "^8.1.0",
+    "next": "^13.0.3",
     "next-routes": "^1.4.2",
     "number-to-bn": "^1.7.0",
     "react": "^16.8.6",
